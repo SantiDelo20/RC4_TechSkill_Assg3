@@ -46,7 +46,7 @@ public class EnvironmentManager : MonoBehaviour
             {
                 print(voxel.Index);
                 //_voxelGrid.CreateBlackBlob(voxel.Index, 15, picky: true, flat: false); //Int is the radius of neighbours
-                _voxelGrid.CreateBlackRectangle(voxel.Index, Random.Range(4, 24), Random.Range(4, 24), Random.Range(4, 10));
+                _voxelGrid.CreateBlackRectangle(voxel.Index, Random.Range(2, 12), Random.Range(4, 20), Random.Range(10, 15));
                 //PredictAndUpdate(allLayers: true);
             }
         }
@@ -59,9 +59,11 @@ public class EnvironmentManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             //CreateRandomBlobs(4,5,10);
-            PopulateRandomBlobsAndSave(500,3, 4, 3, 32);
+            //PopulateRandomBlobsAndSave(500,3, 4, 3, 32);
             //var gridImage = _voxelGrid.ImageFromGrid();
             //_pix2pix.Predict(_voxelGrid.ImageFromGrid());
+            PredictAndUpdate(allLayers: true);
+
         }
 
     }
@@ -88,7 +90,21 @@ public class EnvironmentManager : MonoBehaviour
 
             _voxelGrid.SetStatesFromImage(predicted, layer: i);
         }
+        //sections along z 
+        for (int j = 0; j < _voxelGrid.GridSize.z; j++)
+        {
+            var gridImage = _voxelGrid.SectionGridXY(section: j);
+            var resized = ImageReadWrite.Resize256(gridImage, Color.grey);
+
+            var predicted = _pix2pix.Predict(resized);
+            TextureScale.Point(predicted, _voxelGrid.GridSize.x, _voxelGrid.GridSize.y);
+
+            _voxelGrid.SetStatesFromImage(predicted, layer: j);
+        }
+
     }
+
+
 
     void PopulateRandomBlobsAndSave(int sampleSize, int minAmt, int maxAmt, int minRadius, int maxRadius)
     {

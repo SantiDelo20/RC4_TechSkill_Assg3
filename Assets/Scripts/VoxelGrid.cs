@@ -448,6 +448,35 @@ public class VoxelGrid
         gridImage.Apply();
         return gridImage;
     }
+    public Texture2D SectionGridXY(int section = 0, bool transparent = false)
+    {
+        TextureFormat textureFormat;
+        if (transparent) textureFormat = TextureFormat.RGBA32;
+        else textureFormat = TextureFormat.RGB24; //No alpha
+
+        Texture2D gridImage = new Texture2D(GridSize.x, GridSize.y, textureFormat, true, true);
+
+        for (int i = 0; i < GridSize.x; i++)
+        {
+            for (int j = 0; j < GridSize.y; j++)
+            {
+                var voxel = Voxels[i, j,section];
+
+                Color c;
+                if (voxel.FColor == FunctionColor.Black) c = Color.black;
+                else if (voxel.FColor == FunctionColor.Red) c = Color.red;
+                else if (voxel.FColor == FunctionColor.Yellow) c = Color.yellow;
+                else if (voxel.FColor == FunctionColor.Green) c = Color.green;
+                else if (voxel.FColor == FunctionColor.Cyan) c = Color.cyan;
+                else if (voxel.FColor == FunctionColor.Magenta) c = Color.magenta;
+                else c = new Color(1f, 1f, 1f, 0f); //white(Transparent) alpha = 0
+
+                gridImage.SetPixel(i, j, c);
+            }
+        }
+        gridImage.Apply();
+        return gridImage;
+    }
 
     #endregion
 }

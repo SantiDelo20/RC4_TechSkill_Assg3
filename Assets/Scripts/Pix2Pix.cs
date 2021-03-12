@@ -21,7 +21,7 @@ public class Pix2Pix
     public Pix2Pix()
     {
         // Initialise the model
-        _modelAsset = Resources.Load<NNModel>("Models/Pix2Pix_Blobs");
+        _modelAsset = Resources.Load<NNModel>("Models/octopus_run_1");
         _loadedModel = ModelLoader.Load(_modelAsset);
         _worker = WorkerFactory.CreateWorker(WorkerFactory.Type.ComputePrecompiled, _loadedModel);
     }
